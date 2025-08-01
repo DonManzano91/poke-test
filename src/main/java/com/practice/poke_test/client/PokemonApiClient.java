@@ -5,7 +5,6 @@ import com.practice.poke_test.model.PokeDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -33,9 +32,9 @@ public class PokemonApiClient {
                 .block();
     }
 
-    public List<String> getPokemonByType(String tipoInicial) {
+    public List<String> getPokemonByType(String tipo) {
         return webClient.get()
-                .uri("/type/" + tipoInicial)
+                .uri("/type/" + tipo)
                 .retrieve()
                 .bodyToMono(JsonNode.class)
                 .map(json -> {
@@ -52,29 +51,4 @@ public class PokemonApiClient {
                     return pokemonNames;
                 }).block();
     }
-
-
-    /*
-    * Este es el approach para jalar los valores de la lista que requiero
-    * sin jalar completo el objeto PokeDTO.
-    *
-    * Mono<List<String>> roleNamesMono = webClient.get()
-    .uri("https://api.ejemplo.com/usuario")
-    .retrieve()
-    .bodyToMono(JsonNode.class)
-    .map(json -> {
-        List<String> names = new ArrayList<>();
-        JsonNode rolesNode = json.get("roles");
-        if (rolesNode != null && rolesNode.isArray()) {
-            for (JsonNode role : rolesNode) {
-                JsonNode nameNode = role.get("name");
-                if (nameNode != null && nameNode.isTextual()) {
-                    names.add(nameNode.asText());
-                }
-            }
-        }
-        return names;
-    });
-    *
-    * */
 }
